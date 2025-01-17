@@ -3,16 +3,31 @@
 namespace App\Http\Controllers;
 
 use App\Models\News;
+use app\Services\NewsService;
 use Illuminate\Http\Request;
 
 class NewsController extends Controller
 {
+    protected $newsService;
+
+    public function __construct(NewsService $newsService)
+    {
+        $this->newsService = $newsService;
+    }
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        //
+        try {
+            $perPage = $request->get('per_page', 9);
+
+            $news = $this->newsService->getAllNews($perPage);
+
+            return view('news.index', compact('news'));
+        } catch (\Exception $exception) {
+            return view('news.index', ['error' => $exception->getMessage(), 'news' => collect()]);
+        }
     }
 
     /**
