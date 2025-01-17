@@ -15,3 +15,6 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', [NewsController::class, 'index'])->name('news.index');
+Route::get('/news/{id}', [NewsController::class, 'show'])->name('news.show');
+Route::get('/news/busca', [NewsController::class, 'search'])->name('news.search');
+Route::post('/news', [NewsController::class, 'store'])->name('news.store');
