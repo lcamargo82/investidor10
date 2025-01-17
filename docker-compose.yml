@@ -1,0 +1,37 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: investidor_app
+    networks:
+      - investidor_network
+    depends_on:
+      - db
+    user: "1000:1000"
+    volumes:
+      - ./investidor_app:/var/www
+    ports:
+    - "80:8000"
+
+  db:
+    image: mysql:8.0
+    container_name: mysql_db
+    volumes:
+      - mysqldata:/var/lib/mysql
+    environment:
+      MYSQL_DATABASE: investidor
+      MYSQL_USER: investidor
+      MYSQL_PASSWORD: investidor
+      MYSQL_ROOT_PASSWORD: root
+    networks:
+      - investidor_network
+    ports:
+      - "3306:3306"
+
+networks:
+  investidor_network:
+    driver: bridge
+
+volumes:
+  mysqldata:
