@@ -15,17 +15,24 @@ RUN apt-get update && apt-get install -y \
 
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
-WORKDIR /var/www/news
+WORKDIR /var/www
 
-COPY ./investidor_app /var/www/news
-
-RUN composer install --no-dev --optimize-autoloader
-
-COPY ./xdebug.ini /usr/local/etc/php/conf.d/xdebug.ini
+COPY ./investidor_app/news /var/www
 
 RUN chown -R www-data:www-data /var/www
 
 USER www-data
+
+RUN composer clear-cache
+RUN composer install --no-dev --optimize-autoloader
+
+RUN php artisan config:clear
+RUN php artisan cache:clear
+
+RUN chown -R www-data:www-data /var/www/storage /var/www/bootstrap/cache
+
+COPY ./xdebug.ini /usr/local/etc/php/conf.d/xdebug.ini
+
 EXPOSE 8000
 
-#CMD cd /var/www/news && php artisan serve --host=127.0.0.1 --port=8000
+CMD ["php-fpm"]
