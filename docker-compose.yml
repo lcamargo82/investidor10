@@ -14,7 +14,7 @@ services:
     ports:
     - "8000:8000"
      environment:
-      - DB_HOST=mysql_db
+      - DB_HOST=db
       - DB_PORT=3306
       - DB_DATABASE=investidor
       - DB_USERNAME=investidor
