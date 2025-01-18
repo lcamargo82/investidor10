@@ -8,6 +8,7 @@ RUN apt-get update && apt-get install -y \
     libfreetype6-dev \
     libjpeg62-turbo-dev \
     libpng-dev \
+    nginx \
     && docker-php-ext-configure gd --with-freetype --with-jpeg \
     && docker-php-ext-install -j$(nproc) gd pdo pdo_mysql \
     && pecl install xdebug \
@@ -33,6 +34,8 @@ RUN chown -R www-data:www-data /var/www/storage /var/www/bootstrap/cache
 
 COPY ./xdebug.ini /usr/local/etc/php/conf.d/xdebug.ini
 
-EXPOSE 8000
+EXPOSE 80
 
-CMD ["php-fpm"]
+COPY ./nginx/default.conf /etc/nginx/conf.d/default.conf
+
+CMD service nginx start && php-fpm
