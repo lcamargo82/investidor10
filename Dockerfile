@@ -17,7 +17,7 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
 WORKDIR /var/www
 
-COPY ./investidor_app /var/www
+COPY ./investidor_app/news /var/www
 
 RUN composer install --no-dev --optimize-autoloader
 
@@ -28,4 +28,4 @@ RUN chown -R www-data:www-data /var/www
 USER www-data
 EXPOSE 8000
 
-#CMD cd /var/www/news && php artisan serve --host=127.0.0.1 --port=8000
+CMD ["php", "artisan", "serve", "--host=0.0.0.0", "--port=8000"]
