@@ -13,13 +13,6 @@ services:
       - ./investidor_app:/var/www
     ports:
     - "80:8000"
-    environment:
-      DB_CONNECTION: mysql
-      DB_HOST: db
-      DB_PORT: 3306
-      DB_DATABASE: investidor
-      DB_USERNAME: investidor
-      DB_PASSWORD: investidor
 
   db:
     image: mysql:8.0
