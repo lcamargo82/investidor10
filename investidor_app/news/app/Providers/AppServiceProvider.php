@@ -44,5 +44,13 @@ class AppServiceProvider extends ServiceProvider
             $view->with('authors', $options['authors']);
             $view->with('categories', $options['categories']);
         });
+
+        View::composer('layouts.admin.category.app', function ($view) {
+            $newsService = resolve(NewsService::class);
+            $options = $newsService->getFormOptions();
+
+            $view->with('authors', $options['authors']);
+            $view->with('categories', $options['categories']);
+        });
     }
 }

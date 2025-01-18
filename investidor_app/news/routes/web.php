@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\NewsController;
 use Illuminate\Support\Facades\Route;
 
@@ -27,4 +28,13 @@ Route::prefix('admin')->group(function() {
     Route::get('/news/{id}/edit', [NewsController::class, 'edit'])->name('news.edit');
     Route::put('/news/{id}', [NewsController::class, 'update'])->name('news.update');
     Route::delete('/news/{id}', [NewsController::class, 'destroy'])->name('news.destroy');
+
+    Route::get('/category', [CategoryController::class, 'index'])->name('admin.category');
+    Route::get('/category/{id}', [CategoryController::class, 'show'])->name('admin.category.show');
+    Route::get('/categoria', [CategoryController::class, 'search'])->name('admin.category.search');
+    Route::post('/category', [CategoryController::class, 'store'])->name('admin.category.store');
+    Route::get('/category/{id}/edit', [CategoryController::class, 'edit'])->name('admin.category.edit');
+    Route::put('/category/{id}', [CategoryController::class, 'update'])->name('admin.category.update');
+    Route::delete('/category/{id}', [CategoryController::class, 'destroy'])->name('admin.category.destroy');
+
 });

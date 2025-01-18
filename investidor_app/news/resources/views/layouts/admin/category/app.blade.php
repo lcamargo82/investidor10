@@ -36,8 +36,8 @@
                                 <a href="{{ route('admin.category') }}" class="btn btn-light ms-2 me-4">Visualizar Categorias</a>
                             </li>
                             <li class="nav-item">
-                                <form class="d-flex" action="{{ route('listNews.search') }}" method="GET">
-                                    <input class="form-control me-1" type="search" placeholder="Buscar notícias" aria-label="Buscar" name="q" value="{{ request('q') }}">
+                                <form class="d-flex" action="{{ route('admin.category.search') }}" method="GET">
+                                    <input class="form-control me-1" type="search" placeholder="Buscar categoria" aria-label="Buscar" name="q" value="{{ request('q') }}">
                                     <button class="btn btn-outline-light" type="submit">Buscar</button>
                                 </form>
                             </li>

@@ -4,6 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Models\News;
 use app\Services\NewsService;
+use Illuminate\Contracts\Foundation\Application;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Contracts\View\View;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 
 class NewsController extends Controller
@@ -14,8 +18,10 @@ class NewsController extends Controller
     {
         $this->newsService = $newsService;
     }
+
     /**
-     * Display a listing of the resource.
+     * @param Request $request
+     * @return Application|Factory|View|\Illuminate\Foundation\Application
      */
     public function index(Request $request)
     {
@@ -31,15 +37,8 @@ class NewsController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-       //
-    }
-
-    /**
-     * Store a newly created resource in storage.
+     * @param Request $request
+     * @return RedirectResponse
      */
     public function store(Request $request)
     {
@@ -55,12 +54,13 @@ class NewsController extends Controller
 
             return redirect()->route('news.listNews')->with('success', 'Notícia criada com sucesso!');
         } catch (\Exception $exception) {
-            return redirect()->route('news.listNewsß')->with('error', 'Erro ao criar notícia: ' . $exception->getMessage());
+            return redirect()->route('news.listNews')->with('error', 'Erro ao criar notícia: ' . $exception->getMessage());
         }
     }
 
     /**
-     * Display the specified resource.
+     * @param $id
+     * @return Application|Factory|View|\Illuminate\Foundation\Application
      */
     public function show($id)
     {
@@ -73,17 +73,24 @@ class NewsController extends Controller
         }
     }
 
+    /**
+     * @param $id
+     * @return Application|Factory|View|\Illuminate\Foundation\Application
+     */
     public function showNews($id)
     {
         try {
             $new = $this->newsService->getNewById($id);
 
-            return view('news.admin.show', compact('new'));
+            return view('news.admin.news.show', compact('new'));
         } catch (\Exception $exception) {
-            return view('news.admin.index', ['error' => $exception->getMessage(), 'news' => collect()]);
+            return view('news.admin.news.index', ['error' => $exception->getMessage(), 'news' => collect()]);
         }
     }
 
+    /**
+     * @return Application|Factory|View|\Illuminate\Foundation\Application
+     */
     public function listNews()
     {
         try {
@@ -91,14 +98,15 @@ class NewsController extends Controller
 
             $news = $this->newsService->getAllListNews($perPage);
 
-            return view('news.admin.list', compact('news'));
+            return view('news.admin.news.index', compact('news'));
         } catch (\Exception $exception) {
-            return view('news.admin.index', ['error' => $exception->getMessage()]);
+            return view('news.admin.news.index', ['error' => $exception->getMessage()]);
         }
     }
 
     /**
-     * Show the form for editing the specified resource.
+     * @param $id
+     * @return Application|Factory|View|\Illuminate\Foundation\Application|RedirectResponse
      */
     public function edit($id)
     {
@@ -112,7 +120,9 @@ class NewsController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
+     * @param Request $request
+     * @param $id
+     * @return RedirectResponse
      */
     public function update(Request $request, $id)
     {
@@ -133,7 +143,8 @@ class NewsController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
+     * @param $id
+     * @return RedirectResponse
      */
     public function destroy($id)
     {
@@ -146,6 +157,10 @@ class NewsController extends Controller
         }
     }
 
+    /**
+     * @param Request $request
+     * @return Application|Factory|View|\Illuminate\Foundation\Application
+     */
     public function searchListNews(Request $request)
     {
         try {
@@ -155,15 +170,19 @@ class NewsController extends Controller
                 ? $this->newsService->getNewsBySearch($query)->paginate(9)
                 : News::paginate(9);
 
-            return view('news.admin.list', compact('news'));
+            return view('news.admin.news.index', compact('news'));
         } catch (\Exception $exception) {
-            return view('news.admin.list', [
+            return view('news.admin.news.index', [
                 'news' => collect(),
                 'error' => $exception->getMessage()
             ]);
         }
     }
 
+    /**
+     * @param Request $request
+     * @return Application|Factory|View|\Illuminate\Foundation\Application
+     */
     public function search(Request $request)
     {
         try {
