@@ -7,21 +7,6 @@
         <div class="row">
             @if(isset($news) && $news->isNotEmpty())
                 <div class="row">
-                    @if(session('success'))
-                        <div class="alert alert-success mt-3 alert-dismissible fade show" role="alert">
-                            {{ session('success') }}
-                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                        </div>
-                    @endif
-
-                    @if(session('error'))
-                        <div class="alert alert-danger mt-3 alert-dismissible fade show" role="alert">
-                            {{ session('error') }}
-                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                        </div>
-                    @endif
-
-
                 @foreach($news as $new)
                         <div class="col-md-4 mb-4">
                             <div class="card h-100 d-flex flex-column">

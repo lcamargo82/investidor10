@@ -15,6 +15,16 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', [NewsController::class, 'index'])->name('news.index');
-Route::get('/news/{id}', [NewsController::class, 'show'])->name('news.show');
-Route::get('/news/busca', [NewsController::class, 'search'])->name('news.search');
-Route::post('/news', [NewsController::class, 'store'])->name('news.store');
+Route::get('/noticia/{id}', [NewsController::class, 'show'])->name('news.show');
+Route::get('/noticias', [NewsController::class, 'search'])->name('news.search');
+
+Route::prefix('admin')->group(function() {
+    Route::get('/', [NewsController::class, 'listNews'])->name('news.listNews');
+    Route::get('/news', [NewsController::class, 'searchListNews'])->name('listNews.search');
+    Route::get('/news/{id}', [NewsController::class, 'showNews'])->name('admin.news.show');
+
+    Route::post('/news', [NewsController::class, 'store'])->name('news.store');
+    Route::get('/news/{id}/edit', [NewsController::class, 'edit'])->name('news.edit');
+    Route::put('/news/{id}', [NewsController::class, 'update'])->name('news.update');
+    Route::delete('/news/{id}', [NewsController::class, 'destroy'])->name('news.destroy');
+});

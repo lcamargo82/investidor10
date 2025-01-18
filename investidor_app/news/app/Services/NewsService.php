@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Services;
+namespace app\Services;
 
 use App\Models\Author;
 use App\Models\Category;
@@ -19,6 +19,11 @@ class NewsService
     public function getNewById($id)
     {
         return News::findOrFail($id);
+    }
+
+    public function getAllListNews($perPage = 10)
+    {
+        return News::paginate($perPage);
     }
 
     public function getFormOptions()
@@ -44,9 +49,22 @@ class NewsService
         return $news;
     }
 
+    public function updateNews($id, array $data)
+    {
+        $news = News::findOrFail($id);
+        $news->update($data);
+        return $news;
+    }
+
+    public function deleteNews($id)
+    {
+        $news = News::findOrFail($id);
+        $news->delete();
+    }
+
     public function getNewsBySearch(string $query)
     {
-        return News::when($query, function ($queryBuilder) use ($query) {
+        return News::where(function ($queryBuilder) use ($query) {
             $queryBuilder->where('title', 'like', "%{$query}%")
                 ->orWhereHas('category', function ($queryBuilder) use ($query) {
                     $queryBuilder->where('name', 'like', "%{$query}%");
