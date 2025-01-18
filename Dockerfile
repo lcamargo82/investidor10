@@ -8,7 +8,6 @@ RUN apt-get update && apt-get install -y \
     libfreetype6-dev \
     libjpeg62-turbo-dev \
     libpng-dev \
-    nginx \
     && docker-php-ext-configure gd --with-freetype --with-jpeg \
     && docker-php-ext-install -j$(nproc) gd pdo pdo_mysql \
     && pecl install xdebug \
@@ -20,22 +19,13 @@ WORKDIR /var/www
 
 COPY ./investidor_app/news /var/www
 
-RUN chown -R www-data:www-data /var/www
-
-USER www-data
-
-RUN composer clear-cache
 RUN composer install --no-dev --optimize-autoloader
-
-RUN php artisan config:clear
-RUN php artisan cache:clear
-
-RUN chown -R www-data:www-data /var/www/storage /var/www/bootstrap/cache
 
 COPY ./xdebug.ini /usr/local/etc/php/conf.d/xdebug.ini
 
-EXPOSE 80
+RUN chown -R www-data:www-data /var/www
 
-COPY ./nginx/default.conf /etc/nginx/conf.d/default.conf
+USER www-data
+EXPOSE 8000
 
-CMD ["php-fpm", "-D", "&&", "nginx", "-g", "daemon off;"]
+CMD ["php", "artisan", "serve", "--host=0.0.0.0", "--port=8000"]
