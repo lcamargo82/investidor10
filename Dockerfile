@@ -38,4 +38,4 @@ EXPOSE 80
 
 COPY ./nginx/default.conf /etc/nginx/conf.d/default.conf
 
-CMD service nginx start && php-fpm
+CMD ["php-fpm", "-D", "&&", "nginx", "-g", "daemon off;"]
