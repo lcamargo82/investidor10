@@ -1,7 +1,7 @@
 #!/bin/bash
 
 wait_for_db() {
-    echo "Esperando o banco de dados ficar disponível em $DB_HOST:$DB_PORT..."
+    echo "Esperando o banco de dados ficar disponível em $DB_HOST:$DB_PORT com usuário $DB_USERNAME..."
     until php -r "new PDO('mysql:host=$DB_HOST;port=$DB_PORT;', '$DB_USERNAME', '$DB_PASSWORD');" 2>/dev/null; do
         sleep 2
         echo "Ainda esperando pelo banco de dados..."
