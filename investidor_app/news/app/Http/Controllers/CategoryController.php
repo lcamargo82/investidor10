@@ -3,63 +3,155 @@
 namespace App\Http\Controllers;
 
 use App\Models\Category;
+use app\Services\CategoryService;
+use Illuminate\Contracts\Foundation\Application;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Contracts\View\View;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class CategoryController extends Controller
 {
+    protected $categoryService;
+
+    public function __construct(CategoryService $categoryService)
+    {
+        $this->categoryService = $categoryService;
+    }
+
+
     /**
-     * Display a listing of the resource.
+     * @return Application|Factory|View|\Illuminate\Foundation\Application
      */
     public function index()
     {
-        //
+        try {
+            $perPage = 5;
+
+            $categories = $this->categoryService->getAllCategories($perPage);
+
+            return view('news.admin.category.index', compact('categories'));
+        } catch (\Exception $exception) {
+            return view('news.admin.category.index', [
+                'error' => $exception->getMessage(),
+                'categories' => collect(),
+            ]);
+        }
     }
 
+
     /**
-     * Show the form for creating a new resource.
+     * @return Application|Factory|View|\Illuminate\Foundation\Application
      */
     public function create()
     {
-        //
+        try {
+            return view('categories.create');
+        } catch (\Exception $exception) {
+            return view('news.admin.category.index', ['error' => $exception->getMessage(), 'categories' => collect()]);
+        }
     }
 
     /**
-     * Store a newly created resource in storage.
+     * @param Request $request
+     * @return Application|Factory|View|\Illuminate\Foundation\Application|RedirectResponse
      */
     public function store(Request $request)
     {
-        //
+        try {
+            $validated = $request->validate([
+                'name' => 'required|string|max:255',
+            ]);
+
+            $this->categoryService->createCategory($validated);
+
+            return redirect()->route('categories.index')->with('success', 'Categoria criada com sucesso');
+        } catch (\Exception $exception) {
+            return view('news.admin.category.index', ['error' => $exception->getMessage(), 'categories' => collect()]);
+        }
     }
 
     /**
-     * Display the specified resource.
+     * @param $id
+     * @return Application|Factory|View|\Illuminate\Foundation\Application|RedirectResponse
      */
-    public function show(Category $category)
+    public function show($id)
     {
-        //
+        try {
+            $category = $this->categoryService->getCategoryById($id);
+
+            return view('news.admin.category.show', compact('category'));
+        } catch (\Exception $exception) {
+            return redirect()->route('admin.category')->with('error', $exception->getMessage());
+        }
     }
 
     /**
-     * Show the form for editing the specified resource.
+     * @param $id
+     * @return Application|Factory|View|\Illuminate\Foundation\Application
      */
-    public function edit(Category $category)
+    public function edit($id)
     {
-        //
+        try {
+            $category = $this->categoryService->getCategoryById($id);
+
+            return view('categories.edit', compact('category'));
+        } catch (\Exception $exception) {
+            return view('news.admin.category.index', ['error' => $exception->getMessage(), 'categories' => collect()]);
+        }
     }
 
     /**
-     * Update the specified resource in storage.
+     * @param Request $request
+     * @param $id
+     * @return Application|Factory|View|\Illuminate\Foundation\Application|RedirectResponse
      */
-    public function update(Request $request, Category $category)
+    public function update(Request $request, $id)
     {
-        //
+        try {
+            $this->categoryService->updateCategory($id, $request->all());
+
+            return redirect()->route('admin.category')->with('success', 'Categoria atualizada com sucesso');
+        } catch (\Exception $exception) {
+            return view('news.admin.category.index', ['error' => $exception->getMessage(), 'categories' => collect()]);
+        }
     }
 
     /**
-     * Remove the specified resource from storage.
+     * @param $id
+     * @return RedirectResponse
      */
-    public function destroy(Category $category)
+    public function destroy($id)
     {
-        //
+        try {
+            $this->categoryService->deleteCategory($id);
+
+            return redirect()->route('admin.category')->with('success', 'Categoria deletada com sucesso');
+        } catch (\Exception $exception) {
+            return redirect()->route('admin.category')->with('error', $exception->getMessage());
+        }
+    }
+
+    /**
+     * @param Request $request
+     * @return Application|Factory|View|\Illuminate\Foundation\Application
+     */
+    public function search(Request $request)
+    {
+        try {
+            $query = $request->input('q', '');
+
+            $categories = $query
+                ? $this->categoryService->getCategoriesBySearch($query)->paginate(5)
+                : Category::paginate(5);
+
+            return view('news.admin.category.index', compact('categories'));
+        } catch (\Exception $exception) {
+            return view('news.admin.category.index', [
+                'categories' => collect(),
+                'error' => $exception->getMessage(),
+            ]);
+        }
     }
 }

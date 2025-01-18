@@ -13,7 +13,15 @@ return new class extends Migration
     {
         Schema::create('news', function (Blueprint $table) {
             $table->id();
+            $table->string('title')->unique();
+            $table->text('content');
+            $table->unsignedBigInteger('author_id');
+            $table->unsignedBigInteger('category_id');
             $table->timestamps();
+            $table->softDeletes();
+
+            $table->foreign('author_id')->references('id')->on('authors')->onDelete('cascade');
+            $table->foreign('category_id')->references('id')->on('categories')->onDelete('cascade');
         });
     }
 
