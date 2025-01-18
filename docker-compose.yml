@@ -13,6 +13,17 @@ services:
       - ./investidor_app/news:/var/www
     ports:
     - "8000:8000"
+    environment:
+      DB_CONNECTION=mysql
+      DB_HOST=db
+      DB_PORT=3306
+      DB_DATABASE=investidor
+      DB_USERNAME=laravel
+      DB_PASSWORD=secret
+      APP_ENV=production
+      APP_KEY=base64:SEU_APP_KEY
+      APP_DEBUG=false
+      APP_URL=http://localhost:8000
 
   db:
     image: mysql:8.0
