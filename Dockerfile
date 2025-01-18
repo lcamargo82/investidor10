@@ -15,9 +15,9 @@ RUN apt-get update && apt-get install -y \
 
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
-WORKDIR /var/www
+WORKDIR /var/www/news
 
-COPY ./investidor_app /var/www
+COPY ./investidor_app /var/www/news
 
 RUN composer install --no-dev --optimize-autoloader
 
