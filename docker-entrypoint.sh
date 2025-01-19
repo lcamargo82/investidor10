@@ -17,7 +17,7 @@ wait_for_db() {
 
 echo "Iniciando o entrypoint..."
 
-cd /var/www/news
+cd /var/www
 
 wait_for_db
 
