@@ -52,7 +52,7 @@ services:
       - "3306:3306"
 
 networks:
-  investidor_network:
+  investidor10_investidor_network:
     driver: bridge
 
 volumes:
