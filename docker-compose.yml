@@ -7,15 +7,15 @@ services:
     networks:
       - investidor_network
     depends_on:
-      - db
+      - mysql_db
     restart: always
     user: "1000:1000"
     volumes:
       - ./investidor_app:/var/www
     ports:
-    - "8000:8000"
+    - "8080:8080"
     environment:
-     DB_HOST: db
+     DB_HOST: mysql_db
      DB_PORT: 3306
      DB_DATABASE: investidor
      DB_USER: investidor
@@ -31,13 +31,12 @@ services:
     networks:
       - investidor_network
     ports:
-      - "8080:80"
+      - "8000:80"
     volumes:
       - ./investidor_app/news:/var/www
       - ./nginx.conf:/etc/nginx/nginx.conf
-      - ./investidor_app/news:/usr/share/nginx/html
 
-  db:
+  mysql_db:
     image: mysql:8.0
     container_name: mysql_db
     volumes:
