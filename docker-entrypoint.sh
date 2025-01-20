@@ -5,7 +5,7 @@ wait_for_db() {
     attempt=1
 
     echo "Verificando resolução de DNS para o host do banco de dados ($DB_HOST)..."
-    nslookup $DB_HOST
+    getent hosts $DB_HOST
 
     until php -r "new PDO('mysql:host=$DB_HOST;port=$DB_PORT;dbname=$DB_DATABASE', '$DB_USERNAME_ROOT', '$DB_PASSWORD_ROOT');" 2>/dev/null; do
         if [ $attempt -gt 10 ]; then
