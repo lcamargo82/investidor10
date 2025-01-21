@@ -5,7 +5,7 @@ services:
       dockerfile: Dockerfile
     container_name: investidor_app
     networks:
-      - investidor10_investidor_network
+      - investidor_network
     depends_on:
       - db
     restart: always
@@ -29,7 +29,7 @@ services:
     depends_on:
       - app
     networks:
-      - investidor10_investidor_network
+      - investidor_network
     ports:
       - "8000:80"
     volumes:
@@ -47,12 +47,12 @@ services:
       MYSQL_PASSWORD: investidor
       MYSQL_ROOT_PASSWORD: root
     networks:
-      - investidor10_investidor_network
+      - investidor_network
     ports:
       - "3306:3306"
 
 networks:
-  investidor10_investidor_network:
+  investidor_network:
     driver: bridge
 
 volumes:
