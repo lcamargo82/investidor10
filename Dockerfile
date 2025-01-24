@@ -40,7 +40,7 @@ RUN chown -R www-data:www-data /var/www
 USER www-data
 
 # Expor a porta 80
-EXPOSE 80
+EXPOSE 8000
 
 # Iniciar o PHP-FPM e o Nginx
 CMD nginx -g 'daemon off;' && php-fpm

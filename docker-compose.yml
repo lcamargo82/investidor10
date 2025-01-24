@@ -13,7 +13,7 @@ services:
     volumes:
       - ./investidor_app/news:/var/www
     ports:
-    - "8080:8000"
+    - "80:8000"
     environment:
      DB_HOST: db
      DB_PORT: 3306
