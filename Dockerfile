@@ -17,7 +17,7 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
 WORKDIR /var/www
 
-COPY ./investidor_app /var/www
+COPY ./investidor_app/news /var/www
 
 RUN composer install --no-dev --optimize-autoloader
 
