@@ -30,4 +30,4 @@ RUN chmod +x /usr/local/bin/docker-entrypoint.sh
 
 EXPOSE 80 9000 8000
 
-CMD ["php-fpm"]
+CMD ["php-fpm", "-F"]
