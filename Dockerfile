@@ -26,9 +26,8 @@ COPY ./xdebug.ini /usr/local/etc/php/conf.d/xdebug.ini
 RUN chown -R www-data:www-data /var/www
 
 USER www-data
-EXPOSE 8000
 
-CMD php artisan serve --host=127.0.0.1 --port=8000
+EXPOSE 8000
 
 # FROM php:8.2-fpm
 
