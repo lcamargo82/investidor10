@@ -28,6 +28,8 @@ RUN chown -R www-data:www-data /var/www
 USER www-data
 EXPOSE 8000
 
+CMD ["php-fpm", "-F"]
+
 # FROM php:8.2-fpm
 
 # RUN apt-get update && apt-get install -y \
