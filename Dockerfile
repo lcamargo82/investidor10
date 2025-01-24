@@ -1,29 +1,18 @@
 FROM php:8.2-fpm
 
 RUN apt-get update && apt-get install -y \
-    bash \
-    libpng-dev \
-    libjpeg-turbo8-dev \
-    libwebp-dev \
-    libxpm-dev \
-    zlib1g-dev \
-    libxml2-dev \
-    libzip-dev \
-    icu-devtools \
-    libmemcached-dev \
-    nginx \
+    zip \
+    unzip \
     git \
     curl \
-    php8.1-fpm \
-    php8.1-cli \
-    php8.1-mbstring \
-    php8.1-xml \
-    php8.1-zip \
-    php8.1-curl \
-    php8.1-mysql \
-    php8.1-intl \
-    php8.1-opcache \
-    && apt-get clean && rm -rf /var/lib/apt/lists/*
+    libfreetype6-dev \
+    libjpeg62-turbo-dev \
+    libpng-dev \
+    nginx \
+    && docker-php-ext-configure gd --with-freetype --with-jpeg \
+    && docker-php-ext-install -j$(nproc) gd pdo pdo_mysql \
+    && pecl install xdebug \
+    && docker-php-ext-enable xdebug
 
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
