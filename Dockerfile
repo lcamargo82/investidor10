@@ -1,6 +1,6 @@
 FROM php:8.2-fpm
 
-RUN apk add --no-cache \
+RUN apt-get update && apt-get install -y \
     bash \
     libpng-dev \
     libjpeg-turbo-dev \
