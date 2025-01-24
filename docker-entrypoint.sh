@@ -27,7 +27,7 @@ if [ ! -f /var/www/news/.app_optimized ]; then
     php artisan config:cache
     php artisan route:cache
     php artisan view:cache
-    touch /var/www/news/.app_optimized
+    touch /var/www/.app_optimized
 else
     echo "Aplicação já foi otimizada."
 fi
@@ -36,7 +36,7 @@ if [ ! -f /var/www/news/.migrations_done ]; then
     echo "Rodando as migrations e seeds..."
     php artisan migrate --force
     php artisan db:seed --force
-    touch /var/www/news/.migrations_done
+    touch /var/www/.migrations_done
 else
     echo "Migrations e seeds já foram executados."
 fi
