@@ -27,7 +27,7 @@ RUN chown -R www-data:www-data /var/www
 
 USER www-data
 
-EXPOSE 9000
+EXPOSE 80 9000
 
 # FROM php:8.2-fpm
 
