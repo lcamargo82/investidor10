@@ -20,8 +20,6 @@ WORKDIR /var/www
 
 COPY ./investidor_app/news /var/www
 
-COPY ./nginx.conf /etc/nginx/nginx.conf
-
 RUN chown -R www-data:www-data /var/www \
     && chmod -R 755 /var/www/storage /var/www/bootstrap/cache
 
@@ -30,6 +28,6 @@ RUN composer install --no-dev --optimize-autoloader
 COPY ./docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
 RUN chmod +x /usr/local/bin/docker-entrypoint.sh
 
-EXPOSE 80 9000
+EXPOSE 80 9000 8000
 
 CMD ["php-fpm"]
