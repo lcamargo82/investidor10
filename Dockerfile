@@ -3,21 +3,27 @@ FROM php:8.2-fpm
 RUN apt-get update && apt-get install -y \
     bash \
     libpng-dev \
-    libjpeg-turbo-dev \
+    libjpeg-turbo8-dev \
     libwebp-dev \
     libxpm-dev \
-    zlib-dev \
+    zlib1g-dev \
     libxml2-dev \
     libzip-dev \
-    icu-dev \
+    icu-devtools \
     libmemcached-dev \
     nginx \
     git \
     curl \
-    && docker-php-ext-configure zip \
-    && docker-php-ext-install gd zip pdo pdo_mysql intl opcache \
-    && apk del icu-dev \
-    && rm -rf /var/cache/apk/*
+    php8.1-fpm \
+    php8.1-cli \
+    php8.1-mbstring \
+    php8.1-xml \
+    php8.1-zip \
+    php8.1-curl \
+    php8.1-mysql \
+    php8.1-intl \
+    php8.1-opcache \
+    && apt-get clean && rm -rf /var/lib/apt/lists/*
 
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
