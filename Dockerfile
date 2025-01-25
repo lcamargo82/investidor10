@@ -42,10 +42,16 @@ RUN php artisan config:cache && php artisan route:cache && php artisan view:cach
 # # Configurar diretório de trabalho
 # WORKDIR /var/www
 
-# Expor a porta 80
+# Copiar script de inicialização
+COPY start.sh /start.sh
+
+RUN chmod +x /start.sh
+
+# Expor a porta 9000 para o PHP-FPM
 EXPOSE 9000
 
-CMD ["php-fpm"]
+# Comando padrão ao iniciar o contêiner
+CMD ["/start.sh"]
 
 
 # FROM php:8.2-fpm
