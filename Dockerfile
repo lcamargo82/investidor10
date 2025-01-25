@@ -26,9 +26,13 @@ RUN composer install --no-dev --optimize-autoloader
 
 # Configurar permissões para o diretório /var/www
 RUN chown -R www-data:www-data /var/www
+RUN chmod -R 775 /var/www/storage
 
 # Gerar cache de configuração e otimizações
 RUN php artisan config:cache && php artisan route:cache && php artisan view:cache
+
+ENV PHP_INI_DIR /usr/local/etc/php
+RUN sed -i "s/;open_basedir =/open_basedir = \/var\/www:\/tmp:\/var\/www\/storage/g" $PHP_INI_DIR/php.ini
 
 # Etapa 2: Configuração do servidor de produção
 FROM php:8.2-fpm
@@ -41,11 +45,6 @@ COPY ./nginx/nginx.conf /etc/nginx/sites-available/default
 
 # Copiar arquivos da aplicação do builder
 COPY --from=builder /var/www /var/www
-
-RUN sed -i "s/;open_basedir =/open_basedir = \/var\/www:\/tmp:\/var\/www\/storage/g" /usr/local/etc/php/php.ini
-
-# Configurar diretório de trabalho
-WORKDIR /var/www
 
 # Expor a porta HTTP esperada pelo Render
 EXPOSE 8080
