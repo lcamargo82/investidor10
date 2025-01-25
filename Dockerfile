@@ -25,7 +25,7 @@ COPY ./investidor_app/news /var/www
 RUN composer install --no-dev --optimize-autoloader
 
 # Configurar permissões
-RUN chown -R www-data:www-data /var/www/storage /var/www/bootstrap/cache
+RUN chown -R www-data:www-data /var/www
 
 # Gerar cache de configuração e otimizações
 RUN php artisan config:cache && php artisan route:cache && php artisan view:cache
@@ -44,9 +44,6 @@ COPY --from=builder /var/www /var/www
 
 # Configurar diretório de trabalho
 WORKDIR /var/www
-
-# Atualizar configurações do PHP
-RUN echo "php_admin_value[open_basedir] = /var/www:/tmp:/var/www/storage:/var/www/vendor" >> /usr/local/etc/php-fpm.d/www.conf
 
 # Expor a porta HTTP esperada pelo Render
 EXPOSE 8080
