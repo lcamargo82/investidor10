@@ -22,13 +22,13 @@ WORKDIR /var/www
 COPY ./investidor_app/news /var/www
 
 # Instalar dependências do Laravel
-RUN composer install --no-dev --optimize-autoloader
+RUN composer install --no-dev --optimize-autoloader --no-interaction
 
 # Configurar permissões para o diretório /var/www
 RUN chown -R www-data:www-data /var/www
 
 # Gerar cache de configuração e otimizações
-RUN php artisan config:cache && php artisan route:cache && php artisan view:cache
+RUN php artisan config:cache && php artisan route:cache && php artisan view:cache && php artisan cache:clear
 
 # Etapa 2: Configuração do servidor de produção
 FROM php:8.2-fpm
@@ -41,6 +41,11 @@ COPY ./nginx/nginx.conf /etc/nginx/sites-available/default
 
 # Copiar arquivos da aplicação do builder
 COPY --from=builder /var/www /var/www
+
+RUN chown -R www-data:www-data /var/www
+
+# Gerar cache de configuração e otimizações
+RUN php artisan config:cache && php artisan route:cache && php artisan view:cache && php artisan cache:clear
 
 # Configurar open_basedir para permitir acesso aos diretórios necessários
 RUN echo "php_admin_value[open_basedir] = /var/www:/tmp" >> /usr/local/etc/php-fpm.d/www.conf
