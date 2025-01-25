@@ -39,11 +39,9 @@ RUN chown -R www-data:www-data /var/www
 # Garantir que o PHP-FPM e o Nginx usem o usuário adequado
 USER www-data
 
-# Expor a porta 80
 EXPOSE 8000
 
-# Iniciar o PHP-FPM e o Nginx
-CMD nginx -g 'daemon off;' && php-fpm
+CMD ["php", "artisan", "serve", "--host=0.0.0.0", "--port=8000"]
 
 
 # FROM php:8.2-fpm
