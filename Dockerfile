@@ -26,7 +26,8 @@ RUN composer install --no-dev --optimize-autoloader
 
 # Configurar permissões para o diretório /var/www
 RUN chown -R www-data:www-data /var/www
-RUN chmod -R 775 /var/www/storage
+RUN chmod -R 755 /var/www/storage
+RUN chmod -R 755 /var/www/vendor
 
 # Gerar cache de configuração e otimizações
 RUN php artisan config:cache && php artisan route:cache && php artisan view:cache
@@ -45,8 +46,6 @@ COPY --from=builder /var/www /var/www
 
 # Expor a porta HTTP esperada pelo Render
 EXPOSE 8080
-
-USER www-data
 
 # Comando para iniciar o Nginx e o PHP-FPM juntos
 CMD ["sh", "-c", "service nginx start && php-fpm -F"]
