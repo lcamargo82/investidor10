@@ -43,7 +43,7 @@ RUN php artisan config:cache && php artisan route:cache && php artisan view:cach
 # WORKDIR /var/www
 
 # Copiar script de inicialização
-COPY ./start.sh /start.sh
+COPY ./docker-entrypoint.sh /start.sh
 
 RUN chmod +x /start.sh
 
