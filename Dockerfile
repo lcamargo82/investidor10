@@ -45,6 +45,9 @@ COPY --from=builder /var/www /var/www
 # Configurar diretório de trabalho
 WORKDIR /var/www
 
+# Configurar permissões
+RUN chown -R www-data:www-data /var/www
+
 # Expor a porta HTTP esperada pelo Render
 EXPOSE 8080
 
