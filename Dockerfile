@@ -24,7 +24,7 @@ COPY ./investidor_app/news /var/www
 # Instalar dependências do Laravel
 RUN composer install --no-dev --optimize-autoloader
 
-# Configurar permissões
+# Configurar permissões para o diretório /var/www
 RUN chown -R www-data:www-data /var/www
 
 # Gerar cache de configuração e otimizações
@@ -45,14 +45,16 @@ COPY --from=builder /var/www /var/www
 # Configurar diretório de trabalho
 WORKDIR /var/www
 
-# Configurar permissões
-RUN chown -R www-data:www-data /var/www
+# Atualizar configurações do PHP para permitir acesso aos diretórios
+# Aqui, garantimos que todos os diretórios da aplicação (incluindo storage, vendor, etc.) sejam permitidos
+RUN echo "php_admin_value[open_basedir] = /var/www:/tmp:/var/www/storage:/var/www/vendor:/var/www/bootstrap:/var/www/public" >> /usr/local/etc/php-fpm.d/www.conf
 
 # Expor a porta HTTP esperada pelo Render
 EXPOSE 8080
 
 # Comando para iniciar o Nginx e o PHP-FPM juntos
 CMD ["sh", "-c", "service nginx start && php-fpm"]
+
 
 
 # # Etapa 1: Construção do ambiente -- esse deu certo
