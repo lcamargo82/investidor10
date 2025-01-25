@@ -28,7 +28,7 @@ RUN composer install --no-dev --optimize-autoloader --no-interaction
 RUN chown -R www-data:www-data /var/www
 
 # Gerar cache de configuração e otimizações
-RUN php artisan config:cache && php artisan route:cache && php artisan view:cache && php artisan cache:clear
+RUN php artisan config:cache && php artisan route:cache && php artisan view:cache
 
 # Etapa 2: Configuração do servidor de produção
 FROM php:8.2-fpm
