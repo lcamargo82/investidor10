@@ -30,28 +30,82 @@ RUN chown -R www-data:www-data /var/www/storage /var/www/bootstrap/cache
 # Gerar cache de configuração e otimizações
 RUN php artisan config:cache && php artisan route:cache && php artisan view:cache
 
-# # Etapa 2: Servidor de produção
-# FROM nginx:alpine
+# Etapa 2: Configuração do servidor de produção
+FROM nginx:alpine
 
-# # Copiar configurações do Nginx
-# COPY ./nginx/nginx.conf /etc/nginx/nginx.conf
+# Instalar PHP-FPM
+RUN apk add --no-cache bash php8-fpm
 
-# # Copiar arquivos da aplicação
-# COPY --from=builder /var/www /var/www
+# Copiar configuração do Nginx
+COPY ./nginx/nginx.conf /etc/nginx/conf.d/default.conf
 
-# # Configurar diretório de trabalho
+# Copiar arquivos da aplicação
+COPY --from=builder /var/www /var/www
+
+# Configurar diretório de trabalho
+WORKDIR /var/www
+
+# Expor a porta HTTP esperada pelo Render
+EXPOSE 8080
+
+# Comando para iniciar o Nginx e o PHP-FPM juntos
+CMD ["sh", "-c", "php-fpm -D && nginx -g 'daemon off;'"]
+
+
+# # Etapa 1: Construção do ambiente
+# FROM php:8.2-fpm AS builder
+
+# # Instalar dependências básicas e extensões necessárias
+# RUN apt-get update && apt-get install -y \
+#     git \
+#     unzip \
+#     libzip-dev \
+#     libonig-dev \
+#     curl \
+#     libpng-dev \
+#     libpq-dev \
+#     && docker-php-ext-install pdo pdo_mysql mbstring zip exif pcntl
+
+# # Instalar Composer
+# COPY --from=composer:2.6 /usr/bin/composer /usr/bin/composer
+
+# # Definir diretório de trabalho
 # WORKDIR /var/www
 
-# Copiar script de inicialização
-COPY ./docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
+# # Copiar os arquivos do Laravel para o container
+# COPY ./investidor_app/news /var/www
 
-RUN chmod +x /usr/local/bin/docker-entrypoint.sh
+# # Instalar dependências do Laravel
+# RUN composer install --no-dev --optimize-autoloader
 
-# Expor a porta 9000 para o PHP-FPM
-EXPOSE 9000
+# # Configurar permissões
+# RUN chown -R www-data:www-data /var/www/storage /var/www/bootstrap/cache
 
-# Comando padrão ao iniciar o contêiner
-CMD php-fpm
+# # Gerar cache de configuração e otimizações
+# RUN php artisan config:cache && php artisan route:cache && php artisan view:cache
+
+# # # Etapa 2: Servidor de produção
+# # FROM nginx:alpine
+
+# # # Copiar configurações do Nginx
+# # COPY ./nginx/nginx.conf /etc/nginx/nginx.conf
+
+# # # Copiar arquivos da aplicação
+# # COPY --from=builder /var/www /var/www
+
+# # # Configurar diretório de trabalho
+# # WORKDIR /var/www
+
+# # Copiar script de inicialização
+# COPY ./docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
+
+# RUN chmod +x /usr/local/bin/docker-entrypoint.sh
+
+# # Expor a porta 9000 para o PHP-FPM
+# EXPOSE 9000
+
+# # Comando padrão ao iniciar o contêiner
+# CMD php-fpm
 
 
 # FROM php:8.2-fpm
