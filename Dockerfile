@@ -26,8 +26,6 @@ RUN composer install --no-dev --optimize-autoloader
 
 # Configurar permissões para o diretório /var/www
 RUN chown -R www-data:www-data /var/www
-RUN chmod -R 755 /var/www/storage
-RUN chmod -R 755 /var/www/vendor
 
 # Gerar cache de configuração e otimizações
 RUN php artisan config:cache && php artisan route:cache && php artisan view:cache
@@ -43,6 +41,8 @@ COPY ./nginx/nginx.conf /etc/nginx/sites-available/default
 
 # Copiar arquivos da aplicação do builder
 COPY --from=builder /var/www /var/www
+
+RUN chmod -R 755 /var/www/public
 
 # Expor a porta HTTP esperada pelo Render
 EXPOSE 8080
