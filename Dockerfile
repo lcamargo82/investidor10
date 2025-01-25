@@ -31,9 +31,6 @@ RUN chmod -R 775 /var/www/storage
 # Gerar cache de configuração e otimizações
 RUN php artisan config:cache && php artisan route:cache && php artisan view:cache
 
-ENV PHP_INI_DIR /usr/local/etc/php
-RUN sed -i "s/;open_basedir =/open_basedir = \/var\/www:\/tmp:\/var\/www\/storage/g" $PHP_INI_DIR/php.ini
-
 # Etapa 2: Configuração do servidor de produção
 FROM php:8.2-fpm
 
