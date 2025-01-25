@@ -45,12 +45,6 @@ COPY --from=builder /var/www /var/www
 # Configurar diretório de trabalho
 WORKDIR /var/www
 
-# Atualizar configurações do PHP para permitir acesso a todo o diretório /var/www
-RUN echo "php_admin_value[open_basedir] = /var/www:/tmp" >> /usr/local/etc/php-fpm.d/www.conf
-
-# Garantir permissões adequadas para os diretórios necessários
-RUN chmod -R 775 storage bootstrap/cache && chown -R www-data:www-data /var/www
-
 # Expor a porta HTTP esperada pelo Render
 EXPOSE 8080
 
