@@ -6,8 +6,11 @@ RUN apt-get update && apt-get install -y \
     git \
     unzip \
     libzip-dev \
+    libonig-dev \
+    curl \
+    libpng-dev \
     libpq-dev \
-    && docker-php-ext-install pdo pdo_mysql zip opcache
+    && docker-php-ext-install pdo pdo_mysql mbstring zip exif pcntl
 
 # Instalar Composer
 COPY --from=composer:2.6 /usr/bin/composer /usr/bin/composer
@@ -27,23 +30,22 @@ RUN chown -R www-data:www-data /var/www/storage /var/www/bootstrap/cache
 # Gerar cache de configuração e otimizações
 RUN php artisan config:cache && php artisan route:cache && php artisan view:cache
 
-# Etapa 2: Servidor de produção
-FROM nginx:alpine
+# # Etapa 2: Servidor de produção
+# FROM nginx:alpine
 
-# Copiar configurações do Nginx
-COPY ./nginx/nginx.conf /etc/nginx/nginx.conf
+# # Copiar configurações do Nginx
+# COPY ./nginx/nginx.conf /etc/nginx/nginx.conf
 
-# Copiar arquivos da aplicação
-COPY --from=builder /var/www /var/www
+# # Copiar arquivos da aplicação
+# COPY --from=builder /var/www /var/www
 
-# Configurar diretório de trabalho
-WORKDIR /var/www
+# # Configurar diretório de trabalho
+# WORKDIR /var/www
 
 # Expor a porta 80
-EXPOSE 80
+EXPOSE 9000
 
-# Comando de inicialização do Nginx
-CMD ["nginx", "-g", "daemon off;"]
+CMD ["php-fpm"]
 
 
 # FROM php:8.2-fpm
