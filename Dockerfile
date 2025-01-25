@@ -49,6 +49,8 @@ RUN chmod -R 775 /var/www
 # Configurar diretório de trabalho
 WORKDIR /var/www
 
+RUN echo "php_admin_value[open_basedir] = none" >> /usr/local/etc/php-fpm.d/www.conf
+
 # Expor a porta HTTP esperada pelo Render
 EXPOSE 8080
 
