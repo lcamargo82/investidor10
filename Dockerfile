@@ -44,12 +44,10 @@ COPY --from=builder /var/www /var/www
 
 RUN chown -R www-data:www-data /var/www
 
-RUN chmod -R 775 /var/www
+RUN chmod -R 775 /var/www/public
 
 # Configurar diretório de trabalho
 WORKDIR /var/www
-
-RUN echo "php_admin_value[open_basedir] = none" >> /usr/local/etc/php-fpm.d/www.conf
 
 # Expor a porta HTTP esperada pelo Render
 EXPOSE 8080
