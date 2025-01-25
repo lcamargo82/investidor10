@@ -45,11 +45,68 @@ COPY --from=builder /var/www /var/www
 # Configurar diretório de trabalho
 WORKDIR /var/www
 
+# Atualizar configurações do PHP
+RUN echo "php_admin_value[open_basedir] = /var/www:/tmp/" >> /usr/local/etc/php-fpm.d/www.conf
+
 # Expor a porta HTTP esperada pelo Render
 EXPOSE 8080
 
 # Comando para iniciar o Nginx e o PHP-FPM juntos
 CMD ["sh", "-c", "service nginx start && php-fpm"]
+
+
+# # Etapa 1: Construção do ambiente -- esse deu certo
+# FROM php:8.2-fpm AS builder
+
+# # Instalar dependências básicas e extensões necessárias
+# RUN apt-get update && apt-get install -y \
+#     git \
+#     unzip \
+#     libzip-dev \
+#     libonig-dev \
+#     curl \
+#     libpng-dev \
+#     libpq-dev \
+#     && docker-php-ext-install pdo pdo_mysql mbstring zip exif pcntl
+
+# # Instalar Composer
+# COPY --from=composer:2.6 /usr/bin/composer /usr/bin/composer
+
+# # Definir diretório de trabalho
+# WORKDIR /var/www
+
+# # Copiar os arquivos do Laravel para o container
+# COPY ./investidor_app/news /var/www
+
+# # Instalar dependências do Laravel
+# RUN composer install --no-dev --optimize-autoloader
+
+# # Configurar permissões
+# RUN chown -R www-data:www-data /var/www/storage /var/www/bootstrap/cache
+
+# # Gerar cache de configuração e otimizações
+# RUN php artisan config:cache && php artisan route:cache && php artisan view:cache
+
+# # Etapa 2: Configuração do servidor de produção
+# FROM php:8.2-fpm
+
+# # Instalar Nginx
+# RUN apt-get update && apt-get install -y nginx
+
+# # Copiar configuração do Nginx
+# COPY ./nginx/nginx.conf /etc/nginx/sites-available/default
+
+# # Copiar arquivos da aplicação do builder
+# COPY --from=builder /var/www /var/www
+
+# # Configurar diretório de trabalho
+# WORKDIR /var/www
+
+# # Expor a porta HTTP esperada pelo Render
+# EXPOSE 8080
+
+# # Comando para iniciar o Nginx e o PHP-FPM juntos
+# CMD ["sh", "-c", "service nginx start && php-fpm"]
 
 
 
