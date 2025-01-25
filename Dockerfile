@@ -42,7 +42,7 @@ COPY ./nginx/nginx.conf /etc/nginx/sites-available/default
 # Copiar arquivos da aplicação do builder
 COPY --from=builder /var/www /var/www
 
-RUN echo "php_admin_value[open_basedir] = /var/www:/tmp" >> /usr/local/etc/php-fpm.d/www.conf
+RUN chown -R www-data:www-data /var/www
 
 # Expor a porta HTTP esperada pelo Render
 EXPOSE 8080
