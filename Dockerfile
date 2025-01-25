@@ -51,7 +51,7 @@ RUN chmod +x /docker-entrypoint.sh
 EXPOSE 9000
 
 # Comando padrão ao iniciar o contêiner
-CMD ["/docker-entrypoint.sh"]
+ENTRYPOINT ["docker-entrypoint.sh"]
 
 
 # FROM php:8.2-fpm
