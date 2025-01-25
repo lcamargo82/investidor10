@@ -49,7 +49,7 @@ WORKDIR /var/www
 EXPOSE 8080
 
 # Comando para iniciar o Nginx e o PHP-FPM juntos
-CMD ["sh", "-c", "service nginx start && php-fpm"]
+CMD ["sh", "-c", "service nginx start && php-fpm -F"]
 
 
 
