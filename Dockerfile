@@ -46,7 +46,7 @@ COPY --from=builder /var/www /var/www
 WORKDIR /var/www
 
 # Atualizar configurações do PHP
-RUN echo "php_admin_value[open_basedir] = /var/www:/tmp/" >> /usr/local/etc/php-fpm.d/www.conf
+RUN echo "php_admin_value[open_basedir] = /var/www:/tmp:/var/www/storage:/var/www/vendor" >> /usr/local/etc/php-fpm.d/www.conf
 
 # Expor a porta HTTP esperada pelo Render
 EXPOSE 8080
