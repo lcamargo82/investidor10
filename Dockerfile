@@ -42,9 +42,7 @@ COPY ./nginx/nginx.conf /etc/nginx/sites-available/default
 # Copiar arquivos da aplicação do builder
 COPY --from=builder /var/www /var/www
 
-RUN chown -R www-data:www-data /var/www
-
-RUN chmod -R 775 /var/www/public
+RUN sed -i "s/;open_basedir =/open_basedir = \/var\/www:\/tmp:\/var\/www\/storage/g" /usr/local/etc/php/php.ini
 
 # Configurar diretório de trabalho
 WORKDIR /var/www
