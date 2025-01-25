@@ -31,7 +31,7 @@ RUN php artisan config:cache && php artisan route:cache && php artisan view:cach
 FROM nginx:alpine
 
 # Copiar configurações do Nginx
-COPY ./docker/nginx/nginx.conf /etc/nginx/nginx.conf
+COPY ./nginx/nginx.conf /etc/nginx/nginx.conf
 
 # Copiar arquivos da aplicação
 COPY --from=builder /var/www /var/www
