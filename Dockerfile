@@ -43,15 +43,15 @@ RUN php artisan config:cache && php artisan route:cache && php artisan view:cach
 # WORKDIR /var/www
 
 # Copiar script de inicialização
-COPY ./docker-entrypoint.sh /start.sh
+COPY ./docker-entrypoint.sh /docker-entrypoint.sh
 
-RUN chmod +x /start.sh
+RUN chmod +x /docker-entrypoint.sh
 
 # Expor a porta 9000 para o PHP-FPM
 EXPOSE 9000
 
 # Comando padrão ao iniciar o contêiner
-CMD ["/start.sh"]
+CMD ["/docker-entrypoint.sh"]
 
 
 # FROM php:8.2-fpm
