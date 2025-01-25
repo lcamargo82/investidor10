@@ -46,6 +46,8 @@ COPY --from=builder /var/www /var/www
 # Expor a porta HTTP esperada pelo Render
 EXPOSE 8080
 
+USER www-data
+
 # Comando para iniciar o Nginx e o PHP-FPM juntos
 CMD ["sh", "-c", "service nginx start && php-fpm -F"]
 
