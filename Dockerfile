@@ -3,6 +3,7 @@ FROM php:8.2-fpm AS builder
 
 # Instalar dependências básicas e extensões necessárias
 RUN apt-get update && apt-get install -y \
+    nginx \
     git \
     unzip \
     libzip-dev \
@@ -14,6 +15,9 @@ RUN apt-get update && apt-get install -y \
 
 # Instalar Composer
 COPY --from=composer:2.6 /usr/bin/composer /usr/bin/composer
+
+# # Copiar configuração do Nginx
+COPY ./nginx/nginx.conf /etc/nginx/sites-available/default
 
 # Definir diretório de trabalho
 WORKDIR /var/www
@@ -30,25 +34,28 @@ RUN chown -R www-data:www-data /var/www
 # Gerar cache de configuração e otimizações
 RUN php artisan config:cache && php artisan route:cache && php artisan view:cache
 
+
+
+
 # Etapa 2: Configuração do servidor de produção
-FROM php:8.2-fpm
+# FROM php:8.2-fpm
 
-# Instalar Nginx
-RUN apt-get update && apt-get install -y nginx
+# # Instalar Nginx
+# RUN apt-get update && apt-get install -y nginx
 
-# Copiar configuração do Nginx
-COPY ./nginx/nginx.conf /etc/nginx/sites-available/default
+# # Copiar configuração do Nginx
+# COPY ./nginx/nginx.conf /etc/nginx/sites-available/default
 
-# Copiar arquivos da aplicação do builder
-COPY --from=builder /var/www /var/www
+# # Copiar arquivos da aplicação do builder
+# COPY --from=builder /var/www /var/www
 
-RUN chown -R www-data:www-data /var/www
+# RUN chown -R www-data:www-data /var/www
 
-# Gerar cache de configuração e otimizações
-RUN php artisan config:cache && php artisan route:cache && php artisan view:cache
+# # Gerar cache de configuração e otimizações
+# RUN php artisan config:cache && php artisan route:cache && php artisan view:cache
 
-# Configurar open_basedir para permitir acesso aos diretórios necessários
-RUN echo "php_admin_value[open_basedir] = /var/www:/tmp" >> /usr/local/etc/php-fpm.d/www.conf
+# # Configurar open_basedir para permitir acesso aos diretórios necessários
+# RUN echo "php_admin_value[open_basedir] = /var/www:/tmp" >> /usr/local/etc/php-fpm.d/www.conf
 
 # Expor a porta HTTP esperada pelo Render
 EXPOSE 8080
