@@ -30,11 +30,14 @@ RUN chown -R www-data:www-data /var/www/storage /var/www/bootstrap/cache
 # Gerar cache de configuração e otimizações
 RUN php artisan config:cache && php artisan route:cache && php artisan view:cache
 
-# Etapa 2: Configuração do servidor de produção com Nginx
-FROM nginx:alpine
+# Etapa 2: Configuração do servidor de produção
+FROM php:8.2-fpm
+
+# Instalar Nginx
+RUN apt-get update && apt-get install -y nginx
 
 # Copiar configuração do Nginx
-COPY ./nginx/nginx.conf /etc/nginx/conf.d/default.conf
+COPY ./nginx/nginx.conf /etc/nginx/sites-available/default
 
 # Copiar arquivos da aplicação do builder
 COPY --from=builder /var/www /var/www
@@ -46,7 +49,8 @@ WORKDIR /var/www
 EXPOSE 8080
 
 # Comando para iniciar o Nginx e o PHP-FPM juntos
-CMD ["sh", "-c", "php-fpm -D && nginx -g 'daemon off;'"]
+CMD ["sh", "-c", "service nginx start && php-fpm"]
+
 
 
 
