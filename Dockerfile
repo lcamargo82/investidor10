@@ -42,7 +42,7 @@ COPY ./nginx/nginx.conf /etc/nginx/sites-available/default
 # Copiar arquivos da aplicação do builder
 COPY --from=builder /var/www /var/www
 
-RUN chmod -R 775 storage bootstrap/cache && chown -R www-data:www-data /var/www
+RUN chmod -R 775 /var/www/public/storage bootstrap/cache && chown -R www-data:www-data /var/www
 
 # Configurar diretório de trabalho
 WORKDIR /var/www
