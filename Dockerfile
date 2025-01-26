@@ -34,6 +34,10 @@ RUN chown -R www-data:www-data /var/www
 # Gerar cache de configuração e otimizações
 RUN php artisan config:cache && php artisan route:cache && php artisan view:cache
 
+# Configurar open_basedir para permitir acesso aos diretórios necessários
+RUN echo "php_admin_value[open_basedir] = /var/www:/tmp" >> /usr/local/etc/php-fpm.d/www.conf
+
+
 
 
 
