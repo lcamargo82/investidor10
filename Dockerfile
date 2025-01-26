@@ -35,8 +35,8 @@ RUN chown -R www-data:www-data /var/www
 RUN php artisan config:cache && php artisan route:cache && php artisan view:cache
 
 # Configurar open_basedir para permitir acesso aos diretórios necessários
-RUN echo "php_admin_value[open_basedir] = /var/www:/tmp:/var/www/vendor:/var/www/storage:/var/www/public" >> /usr/local/etc/php-fpm.d/www.conf
-
+RUN echo "php_admin_value[open_basedir] = /var/www:/tmp:/var/www/vendor:/var/www/storage:/var/www/public" >> /usr/local/etc/php-fpm.d/www.conf \
+    && echo "open_basedir = /var/www:/tmp:/var/www/vendor:/var/www/storage:/var/www/public" >> /usr/local/etc/php/php.ini
 
 # Expor a porta HTTP esperada pelo Render
 EXPOSE 8080
