@@ -35,11 +35,7 @@ RUN chown -R www-data:www-data /var/www
 RUN php artisan config:cache && php artisan route:cache && php artisan view:cache
 
 # Configurar open_basedir para permitir acesso aos diretórios necessários
-RUN echo "php_admin_value[open_basedir] = /var/www:/tmp" >> /usr/local/etc/php-fpm.d/www.conf
-
-
-
-
+RUN echo "php_admin_value[open_basedir] = /var/www:/tmp:/var/www/vendor:/var/www/storage" >> /usr/local/etc/php-fpm.d/www.conf
 
 # Etapa 2: Configuração do servidor de produção
 # FROM php:8.2-fpm
