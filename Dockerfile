@@ -42,7 +42,9 @@ RUN echo "php_admin_value[open_basedir] = /var/www:/tmp:/var/www/vendor:/var/www
 EXPOSE 8080
 
 # Comando para iniciar o Nginx e o PHP-FPM juntos
-CMD ["sh", "-c", "service nginx start && php-fpm -F"]
+# CMD ["sh", "-c", "service nginx start && php-fpm -F"]
+CMD service nginx start && php-fpm -F
+
 
 
 
